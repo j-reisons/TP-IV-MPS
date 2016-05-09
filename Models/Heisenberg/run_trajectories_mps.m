@@ -3,9 +3,10 @@ function run_trajectories_mps(N,U,G,D_max,N_traj)
 J = 1;
 dt = 0.01;
 
-T = 100 + 3*N; %Total evolution time
-T_cut = 3*N;
-i_cut = round(T_cut/dt);
+T_transient = 100; % Time of transient (before averaging)
+T_averaging = 3*N; % Time during which averaging occurs
+T = T_transient + T_averaging; %Total evolution time
+i_cut = round(T_transient/dt);
 
 time = linspace(0,T,floor(T/dt)+1);
 [U_odd,U_even] = HeisenbergOpen_U_O2(N,J,U,G,dt);

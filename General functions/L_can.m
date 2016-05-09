@@ -5,11 +5,11 @@ function Mleft = L_can(mps,site,varargin)
 % 1.1
 a = 0;
 if ~isempty(varargin)
-    if mod(varagin,1) == 0
+    if mod(varargin{1},1) == 0
         D_max = varargin{1};
         a = 1;
-    elseif varargin < 1 && varargin > 0
-        tolerance = varargin;
+    elseif varargin{1} < 1 && varargin{1} > 0
+        tolerance = varargin{1};
         a = 2;
     end
 end
@@ -29,10 +29,12 @@ switch a
     case 0
     S = S /sqrt(trace(S*S'));
     case 1
+        if size(S,1) > D_max
     U = U(:,1:D_max);
     S = S(1:D_max,1:D_max);
     S = S /sqrt(trace(S*S'));
     V = V(:,1:D_max);
+        end
     case 2
     S_2 = S*S';
     S = S /sqrt(trace(S_2));
