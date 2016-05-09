@@ -132,5 +132,4 @@ M_mean = mean(M_cut,2);
 
 J_N = (M_mean(N) + 1)/2;
 
-
 save(filename,'M_mean','J_N');
