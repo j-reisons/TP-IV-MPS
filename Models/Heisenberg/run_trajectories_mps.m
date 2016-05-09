@@ -1,8 +1,7 @@
-function run_trajectories_mps(N,U,G,N_traj)
+function run_trajectories_mps(N,U,G,D_max,N_traj)
 %%
 J = 1;
 dt = 0.01;
-D_max = 5;
 
 T = 100 + 3*N; %Total evolution time
 T_cut = 3*N;
