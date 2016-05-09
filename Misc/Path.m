@@ -1,1 +1,0 @@
-addpath(genpath('C:\Users\Juris\Documents\MATLAB\TP IV\Git-MPS'))
