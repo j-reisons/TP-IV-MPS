@@ -1,5 +1,5 @@
 function run_trajectories_mps(N,U,G,D_max,N_traj,tag)
-%% tag is included at the end of the filename
+%% tag is included at the end of the filename (must be string)
 J = 1;
 dt = 0.01;
 
