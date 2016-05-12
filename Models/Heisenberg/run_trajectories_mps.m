@@ -1,5 +1,5 @@
-function run_trajectories_mps(N,U,G,D_max,N_traj)
-%%
+function run_trajectories_mps(N,U,G,D_max,N_traj,tag)
+%% tag is included at the end of the filename
 J = 1;
 dt = 0.01;
 
@@ -12,7 +12,7 @@ time = linspace(0,T,floor(T/dt)+1);
 [U_odd,U_even] = HeisenbergOpen_U_O2(N,J,U,G,dt);
 
 filename = ['trajectories_MPS','_N',strrep(num2str(N),'.',',') ,'_U',strrep(num2str(U),'.',',')...
-    ,'_G',strrep(num2str(G),'.',','),'_Traj',num2str(N_traj),'.mat'];
+    ,'_G',strrep(num2str(G),'.',','),'_Traj',num2str(N_traj),'.',tag,'.mat'];
 
 %rng shuffle
 stream = RandStream('mt19937ar','Seed',5489); % MATLAB's start-up settings
