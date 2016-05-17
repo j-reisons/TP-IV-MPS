@@ -1,5 +1,11 @@
-function run_trajectories_mps(N,U,G,D_max,N_traj,tag)
-%% tag is included at the end of the filename (must be string)
+function run_trajectories_mps(N,U,G,tolerance,N_traj,tag)
+% tag is included at the end of the filename (must be string)
+% Initial state is a random mps of bond dimension 20
+
+%rng shuffle
+stream = RandStream('mt19937ar','Seed',5489); % MATLAB's start-up settings
+RandStream.setGlobalStream(stream);
+
 J = 1;
 dt = 0.01;
 
@@ -13,10 +19,6 @@ time = linspace(0,T,floor(T/dt)+1);
 
 filename = ['trajectories_MPS','_N',strrep(num2str(N),'.',',') ,'_U',strrep(num2str(U),'.',',')...
     ,'_G',strrep(num2str(G),'.',','),'_Traj',num2str(N_traj),'_',tag,'.mat'];
-
-%rng shuffle
-stream = RandStream('mt19937ar','Seed',5489); % MATLAB's start-up settings
-RandStream.setGlobalStream(stream);
 
 %%
 S_Z =[
@@ -32,11 +34,13 @@ S_plus = sparse([
 S_minus = S_plus.';
 %%
 Profiles_all = zeros(N_traj,N);
-Currents_all = [];
+Currents_all = zeros(N_traj,1);
+Cut_data_all = zeros(N_traj,3);
 
 parfor traj = 1:N_traj
-State = random_mps(N,D_max,2);
+State = random_mps(N,20,2);
 Profile = zeros(1,N);
+Cut_data = [0,0,0]; % total_error,max_error,max_D
 
 for i = 1 : length(time);
         %%%%%%%%%%Record after transient%%%%%%%%
@@ -65,22 +69,29 @@ end
     else
         State = apply(U_odd,State);
         State = sweep(State,1);
-        State = sweep(State,-1,D_max);
+        [State,error_v,D_v] = sweep(State,-1,tolerance);
+        Cut_data = Cut_data_Update(error_v,D_v,Cut_data);
+        
         State = apply(U_even,State);
         State = sweep(State,-1);
-        State = sweep(State,1,D_max);
+        [State,error_v,D_v] = sweep(State,1,tolerance);
+        Cut_data = Cut_data_Update(error_v,D_v,Cut_data);
+        
         State = apply(U_odd,State);
         State = sweep(State,1);
-        State = sweep(State,-1,D_max);
+        [State,error_v,D_v] = sweep(State,-1,tolerance);
+        Cut_data = Cut_data_Update(error_v,D_v,Cut_data);
     end
 end
 Profile = Profile/(length(time)- i_cut);
 Profiles_all(traj,:) = Profile;
 Currents_all(traj) = (Profile(N) + 1)/2;
+Cut_data_all(traj,:) = Cut_data;
+
 end
 
 Mean_Profile = mean(Profiles_all,1);
 Mean_Current = mean(Currents_all);
 
-save(filename,'Profiles_all','Currents_all','Mean_Profile','Mean_Current');
+save(filename,'Profiles_all','Currents_all','Mean_Profile','Mean_Current','Cut_data_all');
 end
