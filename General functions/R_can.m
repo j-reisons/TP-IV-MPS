@@ -24,11 +24,10 @@ Mright = mps;
 work = Mright{site};
 s_w = size(work);
 work = reshape(work,[s_w(1),s_w(2)*s_w(3)]);
-s_w2 = size(work);
 try
 [U,S,V] = svd(work,'econ');
 catch
-    work = work + rand(s_w2)*1E-12;
+    work = work + rand(size(work))*1E-10;
     [U,S,V] = svd(work,'econ');
 end
 s_s = size(S,1);
