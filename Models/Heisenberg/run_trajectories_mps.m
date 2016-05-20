@@ -1,4 +1,4 @@
-function run_trajectories_mps(N,U,G,tolerance,N_traj,tag)
+function run_trajectories_mps(N,U,G,tolerance,D_limit,N_traj,tag)
 % tag is included at the end of the filename (must be string)
 % Initial state is a random mps of bond dimension 20
 
@@ -18,7 +18,8 @@ time = linspace(0,T,floor(T/dt)+1);
 [U_odd,U_even] = HeisenbergOpen_U_O2(N,J,U,G,dt);
 
 filename = ['trajectories_MPS','_N',strrep(num2str(N),'.',',') ,'_U',strrep(num2str(U),'.',',')...
-    ,'_G',strrep(num2str(G),'.',','),'_Traj',num2str(N_traj),'_',tag,'.mat'];
+    ,'_G',strrep(num2str(G),'.',','),'_tol',num2str(tolerance),'_D',num2str(D_limit)...
+    ,'_Traj',num2str(N_traj),'_',tag,'.mat'];
 
 %%
 S_Z =[
@@ -71,20 +72,20 @@ end
     else
         State = apply(U_odd,State);
         State = sweep(State,1);
-        [State,error_v,D_v] = sweep(State,-1,tolerance);
+        [State,error_v,D_v] = sweep(State,-1,tolerance,D_limit);
         D_of_t(:,3*i - 2) = D_v;
         Cut_data = Cut_data_Update(error_v,D_v,Cut_data);
         
         State = apply(U_even,State);
         State = sweep(State,-1);
-        [State,error_v,D_v] = sweep(State,1,tolerance);
+        [State,error_v,D_v] = sweep(State,1,tolerance,D_limit);
         D_of_t(:,3*i - 1) = D_v;
         Cut_data = Cut_data_Update(error_v,D_v,Cut_data);
         
         
         State = apply(U_odd,State);
         State = sweep(State,1);
-        [State,error_v,D_v] = sweep(State,-1,tolerance);
+        [State,error_v,D_v] = sweep(State,-1,tolerance,D_limit);
         D_of_t(:,3*i) = D_v;
         Cut_data = Cut_data_Update(error_v,D_v,Cut_data);
     end
@@ -100,5 +101,6 @@ end
 Mean_Profile = mean(Profiles_all,1);
 Mean_Current = mean(Currents_all);
 
-save(filename,'Profiles_all','Currents_all','Mean_Profile','Mean_Current','Cut_data_all','D_of_t_all');
+save(filename,'N','U','G','tolerance','D_limit','Profiles_all'...
+    ,'Currents_all','Mean_Profile','Mean_Current','Cut_data_all','D_of_t_all');
 end

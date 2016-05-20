@@ -1,7 +1,7 @@
 function [mps_out,error_vector,D_vector] = sweep(mps_in,direction,varargin)
-% varargin is either a precision or a maximal bond dimension
-% For precision / tolerance cut, a maximal bond dimension of 500 is
-% enforced
+% varargin is empty, or tolerance and D_limit
+% If empty, canonization without compression
+% If tolerance and D_lmit is provided compresses to tolerance or D_limit
 
 mps_out = mps_in;
 N = length(mps_in);

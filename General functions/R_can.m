@@ -1,21 +1,16 @@
 function [Mright,error,D_max] = R_can(mps,site,varargin)
 % Right canonizes (and compresses) site of mps and throws the US to the left.
-% varargin is empty, D_max, or tolerance
+% varargin is empty, or tolerance and D_limit
 % If empty, canonization without compression
-% If D_max is provided, compresses the bond to D_max bond dimension
-% If tolerance is provided, compresses to tolerance or D_max of 500
+% If tolerance and D_lmit is provided compresses to tolerance or D_limit
 % First site normalization is thrown out
 
-a = 0; % 0 is no cut, 1 is D_max cut, 2 is tolerance cut
+a = 0; % 0 is no cut, 1 is cut
 
 if ~isempty(varargin)
-    if mod(varargin{1},1) == 0
-        D_max = varargin{1};
-        a = 1;
-    elseif varargin{1} < 1 && varargin{1} > 0
-        tolerance = varargin{1};
-        a = 2;
-    end
+    tolerance = varargin{1};
+    D_limit = varargin{2};
+    a = 1;
 end
 
 N = length(mps);
@@ -37,23 +32,12 @@ switch a
         D_max = size(S,1);
         error = 0;
     case 1
-        if size(S,1) > D_max
-            S = S /sqrt(trace(S*S'));
-            U = U(:,1:D_max);
-            S = S(1:D_max,1:D_max);
-            error = 1 - trace(S*S');
-            S = S /sqrt(trace(S*S'));
-            V = V(:,1:D_max);
-        else
-            error = 0;
-        end
-    case 2
     S_2 = S*S';
     S = S /sqrt(trace(S_2));
     S_2 = diag(S*S');
     cut = 0;
     sum = 0;
-    while 1 - sum > tolerance && cut < 500 && cut < length(S_2)
+    while 1 - sum > tolerance && cut < D_limit && cut < length(S_2)
         cut = cut +1;
         sum = sum + S_2(cut);
     end
