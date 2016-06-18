@@ -1,5 +1,10 @@
 function [X,numindX] = contract(X,indX,Y,indY)
 % Returns contracted tensor and it's number of indices
+% X is array, indX is vector containing indeces to be contracted
+% Y is array, indY is vector containing indeces to be contracted
+% This is the function that we stole from that other paper. It's actually
+% not that hard to understand, but it's not very interesting either.
+
 numindX = length(size(X));
 numindY = length(size(Y)); % Total index counts
 

@@ -1,7 +1,11 @@
 function [mps_out,error_vector,D_vector] = sweep(mps_in,direction,varargin)
+% Function anonizes (if askedcompresses) entire state (it sweeps through
+% it)
 % varargin is empty, or tolerance and D_limit
 % If empty, canonization without compression
 % If tolerance and D_lmit is provided compresses to tolerance or D_limit
+% tolerance/D_limit are simply passed along to R and L_can, nothing happens
+% in this function
 
 mps_out = mps_in;
 N = length(mps_in);

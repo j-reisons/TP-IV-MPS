@@ -1,27 +1,28 @@
 function [Mright,error,D_max] = R_can(mps,site,varargin)
-% Right canonizes (and compresses) site of mps and throws the US to the left.
+% Right canonizes (if asked compresses) $site of mps and throws the US to the left.
 % varargin is empty, or tolerance and D_limit
 % If empty, canonization without compression
-% If tolerance and D_lmit is provided compresses to tolerance or D_limit
+% If tolerance and D_lmit is provided compresses to tolerance and D_limit
 % First site normalization is thrown out
-
-a = 0; % 0 is no cut, 1 is cut
+% Procedure is outline in Schollwock 4.4.2 , page 44
 
 if ~isempty(varargin)
     tolerance = varargin{1};
     D_limit = varargin{2};
-    a = 1;
+    a = 1; % a = 1 is compression
+else
+    a = 0; % a = 0 is no compression
 end
 
 N = length(mps);
-Mright = mps;
+Mright = mps; % returned MPS
 
-work = Mright{site};
+work = Mright{site}; % Intermediate "work" variable
 s_w = size(work);
 work = reshape(work,[s_w(1),s_w(2)*s_w(3)]);
 try
 [U,S,V] = svd(work,'econ');
-catch
+catch % SVD not-converging workaround
     work = work + rand(size(work))*1E-10;
     [U,S,V] = svd(work,'econ');
 end

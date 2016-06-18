@@ -1,13 +1,16 @@
 function mps = apply(mpo,mps,varargin)
-% Applies an MPO to an MPS
+% Applies an MPO to an MPS. Can apply mps on only one site by setting
+% varargin = site. If unspecified, applies on the whole chain
 %
 % The MPO is assumed to be the same for each site
 % i.e. a D_O*D_O square matrix of operators 
 % where D_O is the operator bond dimension.
-% order of indices is (bound,bound,physical,physical)
+% order of indices is (bond,bond,physical,physical)
 % Boundary conditions are assumed to be open.
 %
 % The MPS is assumed to be a cell array
+%
+% See Schollwock 5.1 p.56 
 
 if ~isempty(varargin)
     site = varargin{1};

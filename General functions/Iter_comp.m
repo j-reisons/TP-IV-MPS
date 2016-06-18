@@ -2,6 +2,13 @@ function [mps_out] = Iter_comp(mps_in,D_max,tolerance)
 % Compresses MPS to bond dimension D_max iteratively to specified tolerance
 % Stops if tolerance is reached, or if iterations no longer provide
 % increase in precision
+
+% Function ended up not being used in the code because it did not improve 
+% significantly over SVD compression results. Because of that, and
+% since it's quite long and that I feel quite lazy this Saturday morning I
+% won't comment it.
+% Outlined in Schollwock 4.5.2 p.46
+
 s = size(mps_in{1});
 N = length(mps_in);
 

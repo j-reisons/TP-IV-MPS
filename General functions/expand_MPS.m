@@ -1,5 +1,6 @@
 function state = expand_MPS(mps)
-% expands MPS into QM state vector
+% expands MPS into "big vector"
+% Giacommo wrote this version of the function, I can't comment on it
 
 N = length(mps);
 d = size(mps{1},3);

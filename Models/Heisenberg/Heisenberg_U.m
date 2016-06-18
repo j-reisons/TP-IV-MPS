@@ -1,7 +1,7 @@
 function [U_odd,U_even] = Heisenberg_U(N,J,U,dt)
 %HEISENBERG Returns odd and even evolution operators for the Heisenberg
 %Hamiltonian of parameters N,J,U,dt
-%   Detailed explanation goes here
+%Outlined in Schollwock 7.1.1 p75 and 7.1.2 p 77
 %% Pauli and co
 d = 2;
 
@@ -18,7 +18,6 @@ U_pair = expm(-1i*dt*Ham_pair);
 %% U -> P reshaping
 P = reshape(U_pair,[2,2,2,2]);
 P = permute(P,[4,2,3,1]);
-% P = permute(P,[1,3,2,4]);
 P = reshape(P,[d^2,d^2]); % (sig 1 sig 1'),(sig2 sig2')
 
 %% SVD of P
