@@ -69,8 +69,8 @@ end
         State = sweep(S2,1);
     else
         State = apply(U_odd,State);
-        State = sweep(State,1);
-        [State,error_v,D_v] = sweep(State,-1,tolerance,D_limit);
+        State = sweep(State,1); % canonization before compression sweep
+        [State,error_v,D_v] = sweep(State,-1,tolerance,D_limit); % compression sweep
         Cut_data = Cut_data_Update(error_v,D_v,Cut_data);
         
         State = apply(U_even,State);
